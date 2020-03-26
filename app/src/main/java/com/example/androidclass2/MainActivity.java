@@ -1,5 +1,6 @@
 package com.example.androidclass2;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,9 +27,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText et_todo;
     private EditText et_date;
     private Button bt_add;
-    private RecyclerView todo_list;
+    private RecyclerView todo_recyclerView;
     private List<Todo> list;
     private TodoAdapter todoAdapter;
+    private int position_current;
     Calendar calendar= Calendar.getInstance(Locale.CHINA);
 
     @Override
@@ -38,48 +41,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        et_date=findViewById(R.id.et_date);
-        et_todo=findViewById(R.id.et_todo);
-        bt_add=findViewById(R.id.bt_add);
-        todo_list=findViewById(R.id.todo_list);
+        et_date=findViewById(R.id.add_et_date);
+        et_todo=findViewById(R.id.add_et_todo);
+        bt_add=findViewById(R.id.add_bt_add);
+        todo_recyclerView =findViewById(R.id.todo_list);
 
         et_date.setOnClickListener(this);
         bt_add.setOnClickListener(this);
 
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
-        todo_list.setLayoutManager(layoutManager);
+        todo_recyclerView.setLayoutManager(layoutManager);
         list=new ArrayList<>();
         todoAdapter=new TodoAdapter(list);
-        todo_list.setAdapter(todoAdapter);
+        todo_recyclerView.setAdapter(todoAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
-        itemTouchHelper.attachToRecyclerView(todo_list);
+        itemTouchHelper.attachToRecyclerView(todo_recyclerView);
+        todoAdapter.setOnMyItemClickListener(new TodoAdapter.OnMyItemClickListener() {
+            @Override
+            public void myClick(View v, int position) {
+                position_current=position;
+                Intent intent=new Intent(MainActivity.this,TodoEditActivity.class);
+                intent.putExtra("progress",list.get(position).getProgress());
+                startActivityForResult(intent,200);
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.et_date:
+            case R.id.add_et_date:
                 showDatePickerDialog(this,  0, et_date, calendar);
                 break;
-            case R.id.bt_add:
-                String todo_date=et_date.getText().toString().trim();
-                String todo_content=et_todo.getText().toString().trim();
-                if(!todo_date.equals("")&&!todo_content.equals("")){
-                    Todo todo=new Todo(todo_date,todo_content);
-                    list.add(todo);
-                    //根据日期排序
-                    Collections.sort(list, new Comparator<Todo>() {
-                        @Override
-                        public int compare(Todo o1, Todo o2) {
-                            return o1.getDate_l().compareTo(o2.getDate_l());
-                        }
-                    });
-                    todoAdapter.notifyDataSetChanged();
-                }else {
-                    Toast.makeText(this,"日期或事项为空",Toast.LENGTH_SHORT).show();
-                }
-                break;
+            case R.id.add_bt_add:
+                startActivityForResult(new Intent(MainActivity.this,TodoAddActivity.class),100);
         }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode==100&&resultCode==RESULT_OK){
+            list.add((Todo) data.getSerializableExtra("todo"));
+            Collections.sort(list, new Comparator<Todo>() {
+                @Override
+                public int compare(Todo o1, Todo o2) {
+                    return o1.getDate_l().compareTo(o2.getDate_l());
+                }
+            });
+            todoAdapter.notifyDataSetChanged();
+        }
+        if(requestCode==200&&resultCode==RESULT_OK){
+            try {
+                list.get(position_current).setProgress(Integer.parseInt(data.getStringExtra("new_pro")));
+            } catch (NumberFormatException e) {
+                Toast.makeText(MainActivity.this,"输入进度有误,请重新输入",Toast.LENGTH_SHORT).show();
+            }
+            todoAdapter.notifyDataSetChanged();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public static void showDatePickerDialog(Activity activity, int themeResId, final EditText tv, Calendar calendar) {
