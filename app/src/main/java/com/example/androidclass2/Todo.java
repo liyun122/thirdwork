@@ -6,17 +6,32 @@ import java.io.Serializable;
  * Created by xing on 2020/3/14.
  */
 public class Todo implements Comparable<Todo>, Serializable {
-    private String date;
-    private String content;
-    private Integer date_l;
-    private int progress;
+    private String date;//开始日期
+    private String date_ex;//截止日期
+    private String content;//事项内容
+    private Integer date_l;//开启日期(int类型，用于排序)
+    private int progress;//进度
+    private byte[] image;//图片字节数组
 
-    public Todo(String date, String content) {
+    public Todo(String date, String date_ex, String content, int progress, byte[] image) {
         this.date = date;
         this.content = content;
+        this.date_ex=date_ex;
+        this.image=image;
+        this.date_l=Integer.parseInt(date.replaceAll("-",""));
+        this.progress=0;
+        this.progress=progress;
+    }
+
+    public Todo(String date, String date_ex, String content, byte[] image) {
+        this.date = date;
+        this.content = content;
+        this.date_ex=date_ex;
+        this.image=image;
         this.date_l=Integer.parseInt(date.replaceAll("-",""));
         this.progress=0;
     }
+
 
     public int getProgress() {
         return progress;
@@ -36,6 +51,14 @@ public class Todo implements Comparable<Todo>, Serializable {
 
     public String getContent() {
         return content;
+    }
+
+    public String getDate_ex() {
+        return date_ex;
+    }
+
+    public byte[] getImage() {
+        return image;
     }
 
     @Override

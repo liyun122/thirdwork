@@ -24,7 +24,7 @@
         />
     <EditText
         android:id="@+id/add_et_date"
-        android:hint="时间"
+        android:hint="开始时间"
         android:gravity="top"
         android:background="#7ACAEE"
         android:textSize="20sp"
@@ -37,6 +37,24 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         app:layout_constraintTop_toBottomOf="@+id/add_et_todo"
+        app:layout_constraintLeft_toLeftOf="@+id/add_et_todo"
+        app:layout_constraintWidth_percent="0.6"
+        />
+    <EditText
+        android:id="@+id/add_et_date_ex"
+        android:hint="截止时间"
+        android:gravity="top"
+        android:background="#7ACAEE"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:layout_constraintTop_toBottomOf="@+id/add_et_date"
         app:layout_constraintLeft_toLeftOf="@+id/add_et_todo"
         app:layout_constraintWidth_percent="0.6"
         />
@@ -53,5 +71,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintWidth_percent="0.3"
         />
+    <ImageView
+        android:id="@+id/image"
+        android:background="@mipmap/add"
+        app:layout_constraintTop_toBottomOf="@+id/add_et_date_ex"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
