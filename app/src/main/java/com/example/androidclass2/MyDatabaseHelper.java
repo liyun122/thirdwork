@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by xing on 2020/4/17.
- */
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TODO="create table Todo(" +

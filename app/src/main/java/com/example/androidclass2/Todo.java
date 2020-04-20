@@ -2,9 +2,7 @@ package com.example.androidclass2;
 
 import java.io.Serializable;
 
-/**
- * Created by xing on 2020/3/14.
- */
+
 public class Todo implements Comparable<Todo>, Serializable {
     private String date;//开始日期
     private String date_ex;//截止日期

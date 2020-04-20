@@ -20,9 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by xing on 2020/3/14.
- */
+
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     private List<Todo> list_todo;
     private OnMyItemClickListener listener;
@@ -74,7 +72,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 db.delete("Todo","content=?",new String[]{list_todo.get(holder.getAdapterPosition()).getContent()});
-                db.close();
                 list_todo.remove(holder.getAdapterPosition());
                 notifyDataSetChanged();
             }
